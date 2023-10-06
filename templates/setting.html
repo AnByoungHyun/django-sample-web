@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko-kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 정보 수정</title>
+</head>
+<body>
+    <form action="{% url 'mypage' %}" method="POST">
+        {% if message %}
+            <div>
+                <span>{{ message }}</span>
+            </div>
+        {% endif %}
+        {% csrf_token %}
+        <div>
+            이메일: <input type="email" name="email" value="{{ user.email }}">
+        </div>
+        <div>
+            이름: <input type="text" name="first_name" value="{{ user.first_name }}">
+        </div>
+        <div>
+            성: <input type="text" name="last_name" value="{{ user.last_name }}">
+        </div>
+        <div>
+            <button type="submit">수정</button>
+        </div>
+    </form>
+</body>
+</html>
