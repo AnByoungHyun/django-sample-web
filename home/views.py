@@ -1,9 +1,21 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as d_login, logout as d_logout
+from random import randint
 
 def index(request):
-    return render(request, 'index.html', context={'title': '메인 페이지', 'data': '환영합니다.'})
+    if request.user.is_authenticated:
+        # 데이터베이스에서 dataset 조회 로직 필요
+        context = {
+            'dataset': []
+        }
+        dataset = context.get('dataset')
+        for data in range(7):
+            dataset.append(randint(10000, 99999))
+        
+        return render(request, 'index.html', context=context)
+    else:
+        return redirect('login')
 
 def main(request):
     return HttpResponse('<h1>Hello</h1>')
@@ -30,3 +42,23 @@ def logout(request):
 
 def join(request):
     return render(request, 'join.html')
+
+def mypage(request):
+    if request.method == 'GET':
+        return render(request, 'setting.html')
+    elif request.method == 'POST':
+        email = request.POST['email']
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+
+        user = request.user
+        user.email = email
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+
+        context = {
+            'message': '업데이트가 되었습니다. 정보를 확인하세요.'
+        }
+
+        return render(request, 'setting.html',  context=context)
